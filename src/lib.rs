@@ -168,19 +168,19 @@ impl Engine {
             BoardStatus::Stalemate => return 0,
             BoardStatus::Ongoing => ()
         }
-        let eval = match self.probe_hash(board) {
-            Some(x) => return x,
-            None => self.evaluation(board, alpha, beta)
-        };
-        // let eval = self.evaluation(board, alpha, beta);
+        // let eval = match self.probe_hash(board) {
+        //     Some(x) => return x,
+        //     None => self.evaluation(board, alpha, beta)
+        // };
+        let eval = self.evaluation(board, alpha, beta);
         // limiting the depth
-        // if depth > 5 {
-        //     return eval
-        // }
+        if eval >= beta{
+            return beta;
+        }
 
-        // if eval >= beta{
-        //     return beta;
-        // }
+        if eval > alpha {
+            alpha = eval;
+        }
 
 
         for mv in self.filter_moves(board, MoveGen::new_legal(&board), depth) {
@@ -193,7 +193,7 @@ impl Engine {
                 alpha = eval;
             }
         }
-        self.save_hash(board, alpha);
+        // self.save_hash(board, alpha);
         alpha
     }
 

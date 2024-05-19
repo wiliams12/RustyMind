@@ -28,7 +28,7 @@ fn simulate_game(engine: &mut Engine){
             },
             None => ()
         }
-        let mv = match engine.negamax_root(&game.current_position(), 1) {
+        let mv = match engine.negamax_root(&game.current_position(), 2) {
             None => {
                 println!("Game ended");
                 break
@@ -38,7 +38,6 @@ fn simulate_game(engine: &mut Engine){
         pgn.add_move(mv, &game.current_position());
         game.make_move(mv);
         counter += 1;
-        println!("{}", mv);
         println!("Half moves: {}", counter);
         if game.can_declare_draw() {
             game.declare_draw();
