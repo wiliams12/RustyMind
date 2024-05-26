@@ -25,10 +25,6 @@ pub fn filter_moves(board: &Board, moves: MoveGen, depth: i32) -> Vec<ChessMove>
     moves.filter(|x| (gives_check(x, board) && depth < 10) || is_capture(x, board)).collect()
 }
 
-pub fn is_syzygy(board: &Board) -> bool {
-    board.combined().collect::<Vec<_>>().len() < 6
-}
-
 pub fn is_endgame(board: &Board) -> bool {
     // If number of pieces not including 
     let mut pieces = *board.combined();

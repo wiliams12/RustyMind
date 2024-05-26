@@ -2,24 +2,17 @@ use super::helpers::*;
 use super::evaluation::*;
 
 use chess::{Board, BoardStatus, CacheTable, ChessMove, Color, MoveGen, Piece};
-use shakmaty_syzygy::Tablebase;
-use shakmaty::{Chess, Move};
 use rand::thread_rng;
 use rand::prelude::*;
 
 pub struct Engine {
-    tablebase: Tablebase<Chess>,
     random: ThreadRng,
     cache: CacheTable<i32>
 }
 
 impl Engine {
     pub fn new() -> Engine{
-        let mut tables = Tablebase::new();
-        // The tablebases might not work in the final version, because of the placement of the database
-        tables.add_directory("../3-4-5_pieces_Syzygy/3-4-5").unwrap();
         Engine {
-            tablebase: tables,
             random: thread_rng(),
             cache: CacheTable::new(524288, 0)
         }
@@ -40,9 +33,7 @@ impl Engine {
             },
             BoardStatus::Ongoing => (),
         }
-        if is_syzygy(board) {
-            return self.convert_endgame(board).1
-        } 
+
         let mut best_move: Option<ChessMove> = None;  
         let mut max_eval = -100000;
         for mv in reorder_moves(&board, MoveGen::new_legal(&board)) {
@@ -65,10 +56,6 @@ impl Engine {
             BoardStatus::Ongoing => false
         } {
             return self.quiescence_search(board,alpha,beta, 0);
-        }
-
-        if is_syzygy(board) {
-            return self.convert_endgame(board).0
         }
 
         for mv in reorder_moves(&board, MoveGen::new_legal(&board)) {
@@ -135,55 +122,5 @@ impl Engine {
         let hash = board.get_hash();
         let entry = if board.side_to_move() == Color::White { eval } else { -eval };
         self.cache.add(hash, entry);
-    }
-
-
-    fn convert_endgame(&self, board: &Board) -> (i32, Option<ChessMove>){
-        match board.status() {
-            BoardStatus::Checkmate => return (-99999,None),
-            BoardStatus::Stalemate => return (0,None),
-            BoardStatus::Ongoing => ()
-        };
-        let pos = &shakmaty_board(board);
-        let mv = self.tablebase.best_move(pos).unwrap().unwrap().0;
-        let wdl = self.tablebase.probe_wdl(pos).unwrap();
-        let mv = Some(match mv {
-            Move::Normal { from, to, promotion, role, capture } => {
-                let source = square_from_integer(shakmaty_square(from));
-                let dest = square_from_integer(shakmaty_square(to));
-                let promotion_ = match promotion {
-                    None => None,
-                    Some(x) => Some(match u32::from(x) {
-                        1 => Piece::Pawn,
-                        2 => Piece::Knight,
-                        3 => Piece::Bishop,
-                        4 => Piece::Rook,
-                        5 => Piece::Queen,
-                        6 => Piece::King,
-                        _ => unimplemented!(), // Handle other cases if needed
-                    }),
-                };
-                ChessMove::new(source, dest, promotion_)
-            },
-            Move::EnPassant {from, to} => {
-                let source = square_from_integer(shakmaty_square(from));
-                let dest = square_from_integer(shakmaty_square(to));
-                ChessMove::new(source, dest, None)
-            },
-            // Those 2 are not implemented because I am lazy
-            Move::Castle {king, rook}=> panic!("Lazyness error"),
-            Move::Put {role, to} => panic!("Lazyness error"),
-        });
-
-        if wdl.signum() > 0 {
-            return (99999, mv)
-        }
-        else if wdl.signum() < 0 {
-            return (-99999, mv)
-        }
-        else {
-            return (0, mv)
-        }
-
     }
 }

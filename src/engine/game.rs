@@ -25,7 +25,7 @@ impl Game {
 
     pub fn play(&mut self) -> ChessMove{
         let depth = if self.depth == None {
-            4
+            2
         }
         else {
             self.depth.unwrap()
