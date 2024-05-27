@@ -1,27 +1,32 @@
 use super::helpers::*;
 use super::evaluation::*;
 
-use chess::{Board, BoardStatus, CacheTable, ChessMove, Color, MoveGen, Piece};
+use chess::{Board, BoardStatus, CacheTable, ChessMove, Color, MoveGen};
 use rand::thread_rng;
 use rand::prelude::*;
 
 pub struct Engine {
+    // Engine structure
     random: ThreadRng,
     cache: CacheTable<i32>
 }
 
 impl Engine {
     pub fn new() -> Engine{
+        // Object generator
         Engine {
             random: thread_rng(),
             cache: CacheTable::new(524288, 0)
         }
     }
     pub fn play(&mut self, board: &Board, depth: i32) -> Option<ChessMove> {
+        // Calls the necessary function to return the best move
         self.negamax_root(board, depth)
     }
 
     fn negamax_root(&mut self, board: &Board, depth: i32) -> Option<ChessMove> {
+        // Root function to the negamax
+        // Returns the best move selected from recursive calls to the negamax function
         match board.status() {
             BoardStatus::Checkmate => { 
                 println!("checkmate");
@@ -38,6 +43,7 @@ impl Engine {
         let mut max_eval = -100000;
         for mv in reorder_moves(&board, MoveGen::new_legal(&board)) {
             let mut eval = -self.negamax(&board.make_move_new(mv),-99999, 99999,depth-1);
+            // Adds a little random cushion to the moves evaluation so the selection is randomised between similarly evaluated moves
             let random = self.random.gen_range(-1..=1);
             eval += random;
             if eval > max_eval {
@@ -73,6 +79,8 @@ impl Engine {
     }
 
     fn quiescence_search(&mut self,board: &Board, mut alpha: i32, beta: i32, depth: i32) -> i32 {
+        // Quiescence search is used to make sure engine finds a correct move at the end of the node list
+        // Ensures that static evaluation is only used in quiet positions
         // Syzygy is not in quiescence search because it uses a lot of performance and quiescence search is the most vast tree part
         match board.status() {
             BoardStatus::Checkmate => return -99999,
@@ -111,6 +119,7 @@ impl Engine {
     
 
     fn probe_hash(&self, board: &Board) -> Option<i32>{
+        // Returns the value in the hash for a given board
         let hash = board.get_hash();
         match self.cache.get(hash) {
             None => None,
@@ -119,6 +128,7 @@ impl Engine {
     }
 
     fn save_hash(&mut self, board: &Board, eval: i32) {
+        // Saves a board and its evaluation in the hash
         let hash = board.get_hash();
         let entry = if board.side_to_move() == Color::White { eval } else { -eval };
         self.cache.add(hash, entry);
