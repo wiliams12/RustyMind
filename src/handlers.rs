@@ -11,8 +11,7 @@ pub fn id(console: &mut io::StdoutLock) {
 }
 
 pub fn options(console: &mut io::StdoutLock) {
-    //TODO sync the max with the actual engine max
-    writeln!(console, "option name Depth type spin default 4 min 1 max 6").unwrap_or_else(|_| panic!("Error writing to the standard output"));
+    writeln!(console, "option name Depth type spin default 2 min 1 max 6").unwrap_or_else(|_| panic!("Error writing to the standard output"));
 }
 
 
@@ -55,8 +54,7 @@ pub fn set_depth(game: &mut Game, input: &str, console: &mut io::StdoutLock) {
     game.set_depth(value);
 }
 
-pub fn search<'a>(mut game: &mut Game, console: &mut io::StdoutLock) -> (){
+pub fn search(game: &mut Game, console: &mut io::StdoutLock) -> (){
     let best_move = game.play();
     writeln!(console, "bestmove {}", best_move).unwrap();
-    // return game;
 }
