@@ -9,6 +9,7 @@ fn main() {
     let mut out = stdout.lock();
     let mut game = rm::Game::new();
     writeln!(out, "Rusty Mind 0.1").unwrap();
+    writeln!(out, "type .help to get the list of commands").unwrap();
 
     loop {
         let mut input = String::new();
@@ -19,10 +20,23 @@ fn main() {
         }
 
         let command = input.trim();
-        writeln!(out, "Command: {}", command).unwrap();
         out.flush().unwrap();
 
         match command {
+            ".help" => {
+                writeln!(out, ".help - show this message").unwrap();
+                writeln!(out, "uci - UCI protocol standart start of a User/Engine interaction").unwrap();
+                writeln!(out, "isready - check if the engine is ready").unwrap();
+                writeln!(out, "ucinewgame - start a new game").unwrap();
+                writeln!(out, "setoption name Depth value <depth> - set the search depth").unwrap();
+                writeln!(out, "position [fen <fenstring> | startpos] [moves <move1> <move2> ...] - set up the board").unwrap();
+                writeln!(out, "    fen - sets the baord from a FEN string").unwrap();
+                writeln!(out, "    startpos - sets up the default chess board").unwrap();
+                writeln!(out, "    moves - plays moves onto the board").unwrap();
+                writeln!(out, "go - start searching").unwrap();
+                writeln!(out, "quit - exit the program").unwrap();
+                out.flush().unwrap();
+            },
             "uci" => {
                 rm::id(&mut out);
                 rm::options(&mut out);
@@ -34,7 +48,7 @@ fn main() {
                 out.flush().unwrap();
             },
             "ucinewgame" => {
-                game = rm::Game::new(); // Reset the game
+                game = rm::Game::new();
                 writeln!(out, "new game started").unwrap();
                 out.flush().unwrap();
             },

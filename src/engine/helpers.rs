@@ -1,5 +1,4 @@
 use chess::{Board, ChessMove, MoveGen, Piece, EMPTY, CastleRights, Color, File, Rank, Square};
-use shakmaty::{CastlingMode, Chess, fen::Fen};
 
 pub fn sorting_func(board: &Board, chess_move: &ChessMove) -> i32 {
     // returns a numerical value to a move based on the attractivness of the move
@@ -37,48 +36,6 @@ pub fn is_endgame(board: &Board) -> bool {
     pieces.collect::<Vec<_>>().len() < 4
 }
 
-pub fn shakmaty_square(square: shakmaty::Square) -> u8{
-    u8::from(square)
-}
-
-pub fn square_from_integer(index: u8) -> Square {
-    // TODO handle errors better
-    let rank = index / 8;
-    let file = index - rank * 8;
-    let rank = match rank {
-        0 => Rank::First,
-        1 => Rank::Second,
-        2 => Rank::Third,
-        3 => Rank::Fourth,
-        4 => Rank::Fifth,
-        5 => Rank::Sixth,
-        6 => Rank::Seventh,
-        7 => Rank::Eighth,
-        _ => {
-            panic!("Invalid rank index");
-        }
-    };
-    let file = match file {
-        0 => File::A,
-        1 => File::B,
-        2 => File::C,
-        3 => File::D,
-        4 => File::E,
-        5 => File::F,
-        6 => File::G,
-        7 => File::H,
-        _ => {
-            panic!("Invalid file index");
-        }
-    };
-    Square::make_square(rank, file)
-}
-
-pub fn shakmaty_board(board: &Board) -> Chess{
-    board_to_fen(board)
-    .parse::<Fen>().unwrap()
-    .into_position(CastlingMode::Standard).unwrap()
-}
 pub fn is_capture(chess_move: &ChessMove, board: &Board) -> bool{
     // Checks whether a move is a capture
     match board.piece_on(chess_move.get_dest()) {

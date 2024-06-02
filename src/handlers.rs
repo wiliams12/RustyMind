@@ -11,7 +11,7 @@ pub fn id(console: &mut io::StdoutLock) {
 }
 
 pub fn options(console: &mut io::StdoutLock) {
-    writeln!(console, "option name Depth type spin default 2 min 1 max 6").unwrap_or_else(|_| panic!("Error writing to the standard output"));
+    writeln!(console, "option name Depth type spin default 2 min 1").unwrap_or_else(|_| panic!("Error writing to the standard output"));
 }
 
 

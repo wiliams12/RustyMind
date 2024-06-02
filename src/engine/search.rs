@@ -16,7 +16,7 @@ impl Engine {
         // Object generator
         Engine {
             random: thread_rng(),
-            cache: CacheTable::new(524288, 0),
+            cache: CacheTable::new(268_435_456, 0),
         }
     }
     pub fn play(&mut self, board: &Board, depth: i32) -> Option<ChessMove> {
@@ -68,56 +68,49 @@ impl Engine {
 
         for mv in reorder_moves(&board, MoveGen::new_legal(&board)) {
             let eval = -self.negamax(&board.make_move_new(mv), -beta, -alpha, depth - 1);
+            if eval > alpha {
+                alpha = eval;
+            }
+
             if alpha >= beta {
                 break;
             }
 
-            if eval > alpha {
-                alpha = eval;
-            }
         }
         alpha
     }
 
     fn quiescence_search(&mut self, board: &Board, mut alpha: i32, beta: i32, depth: i32) -> i32 {
-        // Quiescence search is used to make sure engine finds a correct move at the end of the node list
-        // Ensures that static evaluation is only used in quiet positions
-        // Syzygy is not in quiescence search because it uses a lot of performance and quiescence search is the most vast tree part
-        match board.status() {
-            BoardStatus::Checkmate => return -99999,
-            BoardStatus::Stalemate => return 0,
-            BoardStatus::Ongoing => (),
-        }
         let eval = match self.probe_hash(board) {
             Some(x) => x,
             None => {
                 let eval = evaluation(board, alpha, beta);
-                self.save_hash(board, eval);
                 eval
             }
         };
+        if board.status() != BoardStatus::Ongoing {
+            return eval;
+        }
         if eval >= beta {
-            return beta;
+            return beta
         }
-
         if eval > alpha {
-            alpha = eval;
+            alpha = eval
         }
-
         for mv in filter_moves(board, MoveGen::new_legal(&board), depth) {
             let eval = -self.quiescence_search(&board.make_move_new(mv), -beta, -alpha, depth + 1);
             if eval >= beta {
                 return beta;
             }
-
             if eval > alpha {
                 alpha = eval;
             }
         }
+        self.save_hash(board, alpha);
         alpha
     }
 
-    fn probe_hash(&self, board: &Board) -> Option<i32> {
+    pub fn probe_hash(&self, board: &Board) -> Option<i32> {
         // Returns the value in the hash for a given board
         let hash = board.get_hash();
         match self.cache.get(hash) {
