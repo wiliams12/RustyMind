@@ -1,6 +1,8 @@
-use std::io::{self, BufRead, Write};
-use rusty_mind as rm;
 use regex::Regex;
+use rusty_mind as rm;
+use std::io::{self, BufRead, Write};
+
+// TODO Format the code so there aren't any warnings
 
 fn main() {
     let stdin = io::stdin();
@@ -25,37 +27,53 @@ fn main() {
         match command {
             ".help" => {
                 writeln!(out, ".help - show this message").unwrap();
-                writeln!(out, "uci - UCI protocol standart start of a User/Engine interaction").unwrap();
+                writeln!(
+                    out,
+                    "uci - UCI protocol standart start of a User/Engine interaction"
+                )
+                .unwrap();
                 writeln!(out, "isready - check if the engine is ready").unwrap();
                 writeln!(out, "ucinewgame - start a new game").unwrap();
-                writeln!(out, "setoption name Depth value <depth> - set the search depth").unwrap();
-                writeln!(out, "position [fen <fenstring> | startpos] [moves <move1> <move2> ...] - set up the board").unwrap();
+                writeln!(
+                    out,
+                    "setoption name Depth value <depth> - set the search depth"
+                )
+                .unwrap();
+                writeln!(
+                    out,
+                    "position [fen <fenstring> | startpos] [moves <move1> <move2> ...]
+            - set up the board"
+                )
+                .unwrap();
                 writeln!(out, "    fen - sets the baord from a FEN string").unwrap();
                 writeln!(out, "    startpos - sets up the default chess board").unwrap();
                 writeln!(out, "    moves - plays moves onto the board").unwrap();
                 writeln!(out, "go - start searching").unwrap();
                 writeln!(out, "quit - exit the program").unwrap();
                 out.flush().unwrap();
-            },
+            }
             "uci" => {
                 rm::id(&mut out);
                 rm::options(&mut out);
                 writeln!(out, "uciok").unwrap();
                 out.flush().unwrap();
-            },
+            }
             "isready" => {
                 writeln!(out, "readyok").unwrap();
                 out.flush().unwrap();
-            },
+            }
+
             "ucinewgame" => {
                 game = rm::Game::new();
                 writeln!(out, "new game started").unwrap();
                 out.flush().unwrap();
-            },
+            }
             "quit" => break,
             _ => {
                 let re1 = Regex::new(r"setoption name Depth value (\d+)").unwrap();
-                let re2 = Regex::new(r"^position\s+(fen\s+([^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+)|startpos)(?:\s+moves(\s+\S+)+)?").unwrap();
+                let re2 = Regex::new(
+            r"^position\s+(fen\s+([^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+ [^ ]+)|startpos)(?:\s+moves(\s+\S+)+)?"
+                ).unwrap();
                 let re3 = Regex::new(r"^go(?:\s.*)?$").unwrap();
 
                 if re1.is_match(command) {

@@ -75,7 +75,6 @@ impl Engine {
             if alpha >= beta {
                 break;
             }
-
         }
         alpha
     }
@@ -92,7 +91,7 @@ impl Engine {
             return eval;
         }
         if eval >= beta {
-            return beta
+            return beta;
         }
         if eval > alpha {
             alpha = eval

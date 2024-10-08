@@ -1,8 +1,7 @@
-use std::str::FromStr;
 use super::search::Engine;
-use chess::{Board,ChessMove, Rank, File, Piece, Square};
+use chess::{Board, ChessMove, File, Piece, Rank, Square};
+use std::str::FromStr;
 use std::time::Instant;
-
 
 pub struct Game {
     // A game structure that holds all the data together
@@ -25,13 +24,13 @@ impl Game {
         self.depth = Some(depth);
     }
 
-    pub fn play(&mut self) -> ChessMove{
+    pub fn play(&mut self) -> ChessMove {
         // returns the best move in the position according to the engine
         // If no depth was selected before, it uses the depth 3
         let depth = self.depth.unwrap_or(3);
         println!("Finding a move at depth: {}", depth);
         let start_best_move = Instant::now();
-        let best_move = self.ai.play(&self.board, depth); 
+        let best_move = self.ai.play(&self.board, depth);
         let duration_best_move = start_best_move.elapsed();
         println!("Time to find best_move_: {:?}", duration_best_move);
         if best_move == None {
