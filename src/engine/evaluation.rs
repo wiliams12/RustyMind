@@ -34,7 +34,7 @@ pub fn evaluation(board: &Board, alpha: i32, beta: i32) -> i32 {
     // Executes only if the position is promising
     // 80 is the 'max' player gets in a material equal position + some little margin
     let margin = 80;
-    if eval > beta - margin || eval < alpha + margin {
+    if eval + margin < beta && eval + margin > alpha {
         // center can be used only with cache, it would be to slow otherwise
         eval += mobility(board, Color::White) + center_control(board, Color::White);
         eval -= mobility(board, Color::Black) + center_control(board, Color::Black);
