@@ -17,7 +17,7 @@ pub fn evaluation(board: &Board, alpha: i32, beta: i32) -> i32 {
     // Evaluation function which returns an evaluation relative to the side to move
     // Returns a value if the game has ended
     match board.status() {
-        BoardStatus::Checkmate => return -99999,
+        BoardStatus::Checkmate => return -99_999,
         BoardStatus::Stalemate => return 0,
         BoardStatus::Ongoing => (),
     }
