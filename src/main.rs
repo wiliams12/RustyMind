@@ -2,8 +2,6 @@ use regex::Regex;
 use rusty_mind as rm;
 use std::io::{self, BufRead, Write};
 
-// TODO Format the code so there aren't any warnings
-
 fn main() {
     let stdin = io::stdin();
     let stdout = io::stdout();
@@ -65,10 +63,10 @@ fn main() {
 
             "ucinewgame" => {
                 game = rm::Game::new();
-                writeln!(out, "new game started").unwrap();
                 out.flush().unwrap();
             }
             "quit" => break,
+            // handles the rest of the commands
             _ => {
                 let re1 = Regex::new(r"setoption name Depth value (\d+)").unwrap();
                 let re2 = Regex::new(

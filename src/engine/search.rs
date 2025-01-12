@@ -40,14 +40,15 @@ impl Engine {
         }
 
         let mut best_move: Option<ChessMove> = None;
-        let mut max_eval = -999_999;
+        let mut alpha = -999_999;
         for mv in reorder_moves(&board, MoveGen::new_legal(&board)) {
-            let mut eval = -self.negamax(&board.make_move_new(mv), -99_999, 99_999, depth - 1);
+            let mut eval = -self.negamax(&board.make_move_new(mv), -999_999, 999_999, depth - 1);
             // Adds a little random cushion to the moves evaluation so the selection is randomised between similarly evaluated moves
             let random = self.random.gen_range(-1..=1);
+            println!("{}", alpha);
             eval += random;
-            if eval > max_eval {
-                max_eval = eval;
+            if eval > alpha {
+                alpha = eval;
                 best_move = Some(mv);
             }
         }

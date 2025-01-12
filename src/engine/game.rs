@@ -27,16 +27,27 @@ impl Game {
     pub fn play(&mut self) -> ChessMove {
         // returns the best move in the position according to the engine
         // If no depth was selected before, it uses the depth 3
+
         let depth = self.depth.unwrap_or(4);
-        // println!("Finding a move at depth: {}", depth);
-        let start_best_move = Instant::now();
         let best_move = self.ai.play(&self.board, depth);
-        let duration_best_move = start_best_move.elapsed();
-        // println!("Time to find best_move_: {:?}", duration_best_move);
         if best_move == None {
             panic!("Internal error, Invalid position")
         }
-        best_move.unwrap()
+        best_move.expect("Internal error, no move selected.")
+    }
+
+    pub fn play_display(&mut self) -> ChessMove {
+        // play method, modified to display additional information
+        let depth = self.depth.unwrap_or(4);
+        println!("Finding a move at depth: {}", depth);
+        let start_best_move = Instant::now();
+        let best_move = self.ai.play(&self.board, depth);
+        let duration_best_move = start_best_move.elapsed();
+        println!("Time to find best_move_: {:?}", duration_best_move);
+        if best_move == None {
+            panic!("Internal error, Invalid position")
+        }
+        best_move.expect("Internal error, no move selected.")
     }
 
     pub fn set_board(&mut self, fen: &str, moves: Vec<&str>) {
