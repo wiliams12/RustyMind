@@ -1,5 +1,16 @@
 use chess::{Board, CastleRights, ChessMove, Color, File, MoveGen, Piece, Rank, Square, EMPTY};
 
+pub fn filter_moves(board: &Board, moves: MoveGen, depth: i32) -> Vec<ChessMove> {
+    // Filters the given moves, returns only captures and checks (if the current side to move is not in check)
+    // Used in the quiescence search
+    if board.checkers() != &EMPTY {
+        return moves.collect();
+    }
+    moves
+        .filter(|x| (gives_check(x, board) && depth < 10) || is_capture(x, board))
+        .collect()
+}
+
 pub fn sorting_func(board: &Board, chess_move: &ChessMove) -> i32 {
     // returns a numerical value to a move based on the attractivness of the move
     if gives_check(chess_move, board) {
@@ -17,17 +28,6 @@ pub fn reorder_moves(board: &Board, moves: MoveGen) -> Vec<ChessMove> {
     new_moves.sort_by_key(|chess_move| sorting_func(board, chess_move));
     new_moves.reverse();
     new_moves
-}
-
-pub fn filter_moves(board: &Board, moves: MoveGen, depth: i32) -> Vec<ChessMove> {
-    // Filters the given moves, returns only captures and checks (if the current side to move is not in check)
-    // Used in the quiescence search
-    if board.checkers() != &EMPTY {
-        return moves.collect();
-    }
-    moves
-        .filter(|x| (gives_check(x, board) && depth < 10) || is_capture(x, board))
-        .collect()
 }
 
 pub fn is_endgame(board: &Board) -> bool {

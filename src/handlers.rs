@@ -57,6 +57,6 @@ pub fn set_depth(game: &mut Game, input: &str, console: &mut io::StdoutLock) {
 }
 
 pub fn search(game: &mut Game, console: &mut io::StdoutLock) -> () {
-    let best_move = game.play();
+    let best_move = game.play_display();
     writeln!(console, "bestmove {}", best_move).unwrap();
 }
