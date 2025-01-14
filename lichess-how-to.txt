@@ -1,5 +1,0 @@
-1.) do složky engines je potřeba nahrát .exe
-2.) je potřeba spustit lichess-bot.py
-3.) BOT poté už může přijímat výzvy
-
-Lichess nějak nezvládá nastavovat hloubku, takže je tam by default 4
