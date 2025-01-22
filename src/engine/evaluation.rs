@@ -155,7 +155,7 @@ fn evaluate_piece(board: &Board, square: Square, color: Color, turn: Color) -> i
     (match piece {
         // Higher pawn value because pawns don't have mobility so their actual value would be lower relative to other pieces
         // Read table is called only on the pieces that require it
-        Piece::Pawn => 115 + read_table(&PAWN_TABLE, square, color),
+        Piece::Pawn => 100 + read_table(&PAWN_TABLE, square, color),
         Piece::Knight => 300 + KNIGHT_TABLE[square.to_int() as usize],
         Piece::Bishop => 310 + BISHOP_TABLE[square.to_int() as usize],
         Piece::Rook => 500 + read_table(&ROOK_TABLE, square, color),
