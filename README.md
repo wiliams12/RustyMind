@@ -67,17 +67,18 @@ Employs **Negamax with Alpha-Beta pruning** to explore game trees efficiently an
 1. Clone the repository:
    ```bash
    git clone https://github.com/wiliams12/RustyMind
-  ```
+   ```
 2. Navigate to the project directory:
     ```bash
     cd RustyMind
     ```
+    
 ### Running the Program
 Compiling the code:
 ```bash
 cargo build
 ```
-### Running the code:
+Running the code:
 ```bash
 cargo run
 ```
