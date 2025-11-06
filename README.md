@@ -77,7 +77,7 @@ Compiling the code:
 ```bash
 cargo build
 ```
-Running the code:
+### Running the code:
 ```bash
 cargo run
 ```
