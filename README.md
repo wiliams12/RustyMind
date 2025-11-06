@@ -1,47 +1,73 @@
-# Chess Program with Rust
+# ♟️ Chess Engine in Rust
 
-## Overview
-This project is a Rust chess engine built on top of the `chess` crate. The program's primary goal is to compute optimal moves using the negamax algorithm with alpha-beta pruning and to implement a robust static evaluation function for assessing chess positions.
+**Rust-based chess engine** built on top of the [`chess`](https://crates.io/crates/chess) crate.  
+It uses the **Negamax algorithm** with **Alpha-Beta pruning** to compute optimal moves and a custom **static evaluation function** to assess chess positions.
 
-## Features
-- **Negamax Algorithm with Alpha-Beta Pruning**: Ensures efficient and optimal move selection.
-- **Static Evaluation Function**: Evaluates positions based on:
-  - Piece values.
-  - Control of the center.
-  - Piece activity.
-  - Positional tables reflecting chess theory and strategy.
-- **Simple Caching**: Speeds up calculations by avoiding redundant computations.
-- **Phase-Specific Evaluation**: Adjusts evaluations based on game phases (opening, middlegame, endgame).
+---
 
-## Limitations
-- Does not include opening or endgame tablebases (due to memory and complexity constraints).
-- Evaluation function is fairly simple and does not recognize positional weaknesses.
-- The depth of the search is limited (6 plies is still manageable).
+## 🧠 Overview
+This project aims to provide a clear and efficient foundation for building a chess AI — focusing on search efficiency, evaluation accuracy, and code simplicity.
 
-## Design Decisions
-The program was designed with simplicity, efficiency, and independence from external data sources in mind. While it does not employ advanced pruning techniques, iterative deepening, or parallelism, it serves as a solid base for future development.
+---
 
-## How It Works
-### Move Generation
-Leverages the Rust `chess` crate for fast and accurate legal move generation.
+## ✨ Features
+- 🔍 **Negamax Algorithm with Alpha-Beta Pruning**  
+  Efficiently finds the best move while pruning unnecessary branches.  
+- 🧩 **Static Evaluation Function** — evaluates positions based on:  
+  - Piece values  
+  - Control of the center  
+  - Piece activity  
+  - Positional tables (reflecting chess theory and strategy)
+- ⚡ **Simple Caching** — avoids redundant calculations.  
+- ⏳ **Phase-Specific Evaluation** — adjusts logic for opening, middlegame, and endgame.
 
-### Position Evaluation
-- Combines piece values, positional bonuses, and piece mobility.
-- Evaluates positions from the perspective of the side to move.
+---
 
-### Search Algorithm
-Applies negamax with alpha-beta pruning to search for optimal moves efficiently.
+## ⚠️ Limitations
+- ❌ No opening or endgame tablebases (memory and complexity constraints)  
+- 🧱 Simplified evaluation — doesn’t yet recognize positional weaknesses  
+- ⏱️ Search depth capped at around **6 plies**
 
-## Getting Started
+---
 
-### Prerequisites
-- **Rust**: Ensure you have Rust installed. [Download Rust here](https://www.rust-lang.org/learn/get-started).
+## 🧩 Design Philosophy
+This engine prioritizes:
+- **Simplicity** — easy to understand and extend  
+- **Efficiency** — uses core Rust features effectively  
+- **Independence** — no reliance on external data sources  
 
-### Installation
+While it doesn’t include advanced pruning, iterative deepening, or parallelism, it serves as a strong foundation for future upgrades.
+
+---
+
+## ⚙️ How It Works
+
+### ♞ Move Generation
+Uses the [`chess`](https://crates.io/crates/chess) crate for **fast, legal move generation**.
+
+### 🧮 Position Evaluation
+Combines:
+- Piece values  
+- Positional bonuses  
+- Piece mobility  
+
+Evaluations are always made from the perspective of the **side to move**.
+
+### 🔁 Search Algorithm
+Employs **Negamax with Alpha-Beta pruning** to explore game trees efficiently and identify the optimal move.
+
+---
+
+## 🚀 Getting Started
+
+### 📦 Prerequisites
+- **Rust** (install via [rust-lang.org](https://www.rust-lang.org/learn/get-started))
+
+### 🧰 Installation
 1. Clone the repository:
    ```bash
    git clone https://github.com/wiliams12/RustyMind
-    ```
+  ```
 2. Navigate to the project directory:
     ```bash
     cd RustyMind
@@ -57,7 +83,7 @@ cargo run
 ```
 The program responds to the uci protocol. Type `.help` for the list of all commands.
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
 
 ## Author
-Williams12: [GitHub Profile](https://github.com/wiliams12)
+Vilém Učík: [GitHub Profile](https://github.com/wiliams12)
